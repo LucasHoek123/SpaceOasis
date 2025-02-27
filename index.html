@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggleable Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            width: 300px;
+            margin: auto;
+        }
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .content-container {
+            background-color: #f1f1f1;
+            padding: 10px;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Menu (Initially Visible) -->
+        <div id="menu">
+            <!-- Task Forces Dropdown -->
+            <button class="button" onclick="toggleDropdown('taskForces')">Task Forces</button>
+            <div class="content-container hidden" id="taskForces">
+                <button class="button" onclick="toggleDropdown('airQualityManagement')">1. Air Quality Management</button>
+                <div class="content-container hidden" id="airQualityManagement">
+                    <button class="button" onclick="hideMenu('aqm.html')">ToDo</button>
+                        <div class="content-container hidden" id="todoContent"></div>
+                    <div class="content">Achievements</div>
+                </div>
+                <div class="content">1. Circular Water</div>
+                <div class="content">1. Extracting Water</div>
+                <div class="content">1. Human Centric Design</div>
+                <div class="content">1. Pykrete</div>
+                <div class="content">1. Seeker (PARODY)</div>
+                <div class="content">1. Shielding</div>
+                <div class="content">1. Structure</div>
+                <div class="content">2. Farming</div>
+                <div class="content">2. Medical Care & Health Monitoring</div>
+                <div class="content">2. Pressure</div>
+                <div class="content">2. Space Interior Design</div>
+                <div class="content">2. Waste Management</div>
+                <div class="content">2. X-Ponics & Algae Bioreactor test</div>
+                <div class="content">3. Between Base Transportation</div>
+                <div class="content">EMMPOL 2025</div>
+            </div>
+
+            <!-- Departments Dropdown -->
+            <button class="button" onclick="toggleDropdown('departments')">Departments</button>
+            <div class="content-container hidden" id="departments">
+                <div class="content">Architecture</div>
+                <div class="content">Engineering</div>
+                <div class="content">Operations</div>
+                <div class="content">Management</div>
+                <div class="content">Biology</div>
+            </div>
+
+            <!-- Time Line Dropdown -->
+            <button class="button" onclick="toggleDropdown('timeline')">Time Line</button>
+            <div class="content-container hidden" id="timeline">
+                <div class="content">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</div>
+            </div>
+        </div>
+
+        <!-- Hidden "Menu" Button (Initially Hidden) -->
+        <button class="button hidden" id="menuButton" onclick="showMenu()">Menu</button>
+
+        <!-- ToDo Content (Initially Hidden) -->
+        <div class="content-container hidden" id="todoContent">
+            <div class="content">Hello World</div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            dropdown.classList.toggle("hidden");
+        }
+
+        function hideMenu(page) {
+            document.getElementById("menu").classList.add("hidden");  // Hide menu
+            document.getElementById("menuButton").classList.remove("hidden");  // Show menu button
+
+            fetch(page)
+                .then(response => response.text())  // Get response as text
+                .then(data => {
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(data, "text/html");  // Parse HTML response
+                    let contentDiv = doc.getElementById("content");  // Extract #content from loaded page
+
+                    if (contentDiv) {
+                        let todoContainer = document.getElementById("todoContent");
+                        todoContainer.innerHTML = contentDiv.innerHTML;  // Insert content
+                        todoContainer.classList.remove("hidden");  // Show ToDo content
+                    } else {
+                        console.error("Error: 'content' div not found in loaded page");
+                    }
+                })
+                .catch(error => console.error("Error loading ToDo content:", error));
+        }
+
+        function showMenu() {
+            document.getElementById("menu").classList.remove("hidden");  // Show menu
+            document.getElementById("menuButton").classList.add("hidden");  // Hide menu button
+            document.getElementById("todoContent").classList.add("hidden"); // Hide ToDo content
+            document.getElementById("todoContent").innerHTML = "";  // Clear loaded content
+
+            // 🔹 Hide all dropdowns to reset the menu state
+            document.getElementById("taskForces").classList.add("hidden");
+            document.getElementById("airQualityManagement").classList.add("hidden");
+            document.getElementById("departments").classList.add("hidden");
+            document.getElementById("timeline").classList.add("hidden");
+        }
+
+    </script>
+
+</body>
+</html>
